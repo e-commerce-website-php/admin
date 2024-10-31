@@ -9,21 +9,6 @@ class AuthGetController
         return $metaTags;
     }
 
-    public static function Register(): void
-    {
-        $metaTags = self::generateMetaTags([
-            "title" => LANGUAGE["create_new_account"]
-        ]);
-
-        $secureToken = Generations::generateToken(Generations::generateFourDigitCode());
-        $_SESSION["secure_token"] = $secureToken;
-
-        AuthService::isAuth() ? Setup::redirect("/") : null;
-        Setup::View("auth/register", [
-            "metaTags" => $metaTags,
-        ]);
-    }
-
     public static function Login(): void
     {
         $metaTags = self::generateMetaTags([

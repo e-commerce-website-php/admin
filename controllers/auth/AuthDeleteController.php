@@ -4,9 +4,11 @@ class AuthDeleteController
 {
     public static function Logout(): void
     {
-        if ($_GET['_method'] === 'DELETE') {
+        if (!empty($_GET['_method']) && $_GET['_method'] === 'DELETE') {
             AuthService::logout();
-            Setup::redirect("/");
+            Setup::redirect("/auth/login");
         }
+
+        Setup::redirect("/");
     }
 }

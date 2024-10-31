@@ -27,27 +27,6 @@ class AuthPostController
         unset($_SESSION["secure_token"]);
     }
 
-    public static function Register(): void
-    {
-        self::checkAccess([AuthGetController::class, "Register"]);
-
-        AuthService::isAuth() ? Setup::redirect("/") : null;
-
-        $preparedData = [];
-
-        foreach (self::$registerFields as $field) {
-            $preparedData[$field] = $_POST[$field] ?? null;
-        }
-
-        $userResult = AuthService::register(...$preparedData);
-
-        if (!$userResult["success"]) {
-            self::render($userResult["error"], [AuthGetController::class, "Register"]);
-        }
-
-        Setup::redirect("/auth/login", 200);
-    }
-
     public static function Login(): void
     {
         self::checkAccess([AuthGetController::class, "Login"]);

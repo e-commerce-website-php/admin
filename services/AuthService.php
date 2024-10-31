@@ -2,62 +2,6 @@
 
 class AuthService
 {
-    public static function register(?string $email, ?string $password, ?string $cpassword): array
-    {
-        global $db;
-        $db->beginTransaction();
-
-        $validationResult = AuthValidator::validateRegister($email, $password, $cpassword);
-        if (!$validationResult["success"]) {
-            return $validationResult;
-        }
-
-        if (self::get("email", $email)["success"]) {
-            return ["success" => false, "error" => LANGUAGE["email_exists"]];
-        }
-
-        $isEmptyTable = self::getAll(1, 0);
-
-        try {
-            $data = [
-                "email" => $email,
-                "password" => password_hash($password, PASSWORD_DEFAULT),
-                "role_access" => count($isEmptyTable) > 0 ? "user" : "admin",
-            ];
-
-            $db->create("users", $data);
-
-            $tokenAndLink = self::generateEmailConfirmationLink($db->getLastInsertedId());
-
-            $db->update("users", [
-                "email_confirmation_token" => $tokenAndLink["token"]
-            ], ["id" => $db->getLastInsertedId()]);
-
-            $emailResult = self::sendSuccessRegistrationEmail($email);
-            if (!$emailResult["success"]) {
-                $db->rollBack();
-                return $emailResult;
-            }
-
-            $emailResult = self::sendConfirmationEmail($email, $tokenAndLink["link"]);
-            if (!$emailResult["success"]) {
-                $db->rollBack();
-                return $emailResult;
-            }
-
-            $db->commit();
-
-            unset($data["password"]);
-            $cleanedUser = Validations::removeNullFields($data);
-
-            return ["success" => true, "data" => $cleanedUser];
-        } catch (Exception $e) {
-            $db->rollBack();
-            Response::serverError($e->getMessage(), $e->getTrace())->send();
-            return ["success" => false, "error" => "Registration failed. Please try again later."];
-        }
-    }
-
     public static function login(?string $email, ?string $password): array
     {
         $validationResult = AuthValidator::validateLogin($email, $password);
@@ -237,54 +181,6 @@ class AuthService
     }
 
     // mails
-    private static function sendSuccessRegistrationEmail(
-        string $email,
-    ): array {
-        $mailManager = new MailService(
-            $email,
-            SETTINGS["website_email"],
-            LANGUAGE["success_registration"],
-        );
-
-        $variables = [
-            "website_link" => SETTINGS["website_link"],
-            "email" => $email,
-            "website_email" => SETTINGS["website_email"],
-            "website_display_name" => SETTINGS["website_display_name"],
-            "website_phone" => SETTINGS["website_phone"],
-        ];
-
-        $mailManager->loadTemplate("success-registration", $variables);
-
-        $result = $mailManager->send();
-        return $result;
-    }
-
-    private static function sendConfirmationEmail(
-        string $email,
-        string $confirmationLink,
-    ): array {
-        $mailManager = new MailService(
-            $email,
-            SETTINGS["website_email"],
-            LANGUAGE["confirmation_email"] . " - " . SETTINGS["website_display_name"],
-        );
-
-        $variables = [
-            "website_link" => SETTINGS["website_link"],
-            "confirmation_link" => $confirmationLink,
-            "email" => $email,
-            "website_email" => SETTINGS["website_email"],
-            "website_phone" => SETTINGS["website_phone"],
-            "website_display_name" => SETTINGS["website_display_name"],
-        ];
-
-        $mailManager->loadTemplate("email-confirmation", $variables);
-
-        $result = $mailManager->send();
-        return $result;
-    }
-
     private static function sendPasswordResetEmail(string $email, string $resetLink): array
     {
         $mailManager = new MailService(

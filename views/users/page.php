@@ -5,7 +5,9 @@
 </header>
 
 <main>
-    <h1 class="text-2xl font-bold text-center mt-5">Категории</h1>
+    <div class="container mx-auto">
+        <h1 class="page-heading">Потребители</h1>
+    </div>
 </main>
 
 <?php require "views/includes/footer.php"; ?>

@@ -1,8 +1,8 @@
 <?php
 
-class IndexGetController
+class UserGetController
 {
-    public static function Dashboard(): void
+    public static function GetItems(): void
     {
         if (!AuthService::isAuth()) {
             Setup::redirect("/auth/login");
@@ -10,10 +10,10 @@ class IndexGetController
 
         $generator = new MetaTagsGenerator();
         $metaTags = $generator->generate([
-            "title" => "Табло",
+            "title" => "Потребители",
         ]);
 
-        Setup::View("index/dashboard", [
+        Setup::View("users", [
             "user" => AuthService::isAuth() ?? null,
             "metaTags" => $metaTags
         ]);

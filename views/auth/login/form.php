@@ -42,8 +42,5 @@
                 Влизане в профила
             </button>
         </div>
-        <div class="mt-5">
-            <a href="/auth/register" class="block my-5 text-link">Нямам профил</a>
-        </div>
     </form>
 </div>
