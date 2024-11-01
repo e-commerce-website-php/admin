@@ -38,19 +38,7 @@ class AuthService
         setcookie("token", $token, $payload["expires"], "/", "", true, true);
 
         return ["success" => true, "token" => $token];
-    }
-
-    public static function getAll(int $limit, int $offset, string $column = "email", string $value = ""): array {
-        global $db;
-        
-        $conditions = [];
-        if ($value !== "") {
-            $conditions[$column] = $value;
-        }
-        
-        $users = $db->read("users", $conditions);
-        return array_slice($users, $offset, $limit);
-    }    
+    }   
 
     public static function forgotPassword($email): array
     {

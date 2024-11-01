@@ -1,0 +1,16 @@
+.table-bordered {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-bordered td,
+.table-bordered th {
+    border: 1px solid #efefef;
+    padding: 5px 10px;
+    text-align: left;
+}
+
+.table-bordered thead tr,
+.table-bordered tr:hover {
+    background-color: var(--background-color);
+}

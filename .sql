@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `state` varchar(100) DEFAULT NULL,
   `postal_code` varchar(20) DEFAULT NULL,
   `country` varchar(100) DEFAULT NULL,
-  `role` varchar(10) DEFAULT 'user',
+  `role_access` varchar(10) DEFAULT 'user',
   `email_confirmation_token` varchar(255) DEFAULT NULL,
   `is_email_confirmed` varchar(1) DEFAULT '0',
   `password_reset_token` varchar(255) DEFAULT NULL,

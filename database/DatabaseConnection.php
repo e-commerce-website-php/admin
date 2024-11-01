@@ -9,7 +9,7 @@ class DatabaseConnection
         try {
             $this->connection = new PDO("mysql:host=$host;dbname=$db_name", $username, $password);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $this->connection->setAttribute(PDO::ATTR_AUTOCOMMIT, false);  // За поддръжка на транзакции
+            $this->connection->setAttribute(PDO::ATTR_AUTOCOMMIT, false);
         } catch (PDOException $e) {
             Response::serverError("Грешка при свързване:", $e->getMessage())->send();
         }
@@ -25,7 +25,6 @@ class DatabaseConnection
         $this->connection = null;
     }
 
-    // Transaction management
     public function beginTransaction()
     {
         return $this->connection->beginTransaction();
@@ -46,9 +45,6 @@ class DatabaseConnection
         return $this->connection->lastInsertId();
     }
 
-    // Generic CRUD operations
-
-    // Create - Insert query
     public function create($table, $data)
     {
         $columns = implode(", ", array_keys($data));
@@ -64,32 +60,49 @@ class DatabaseConnection
         return $stmt->execute();
     }
 
-    // Read - Select query
-    public function read($table, $conditions = [], $columns = "*")
+    public function read($table, $conditions = [], $columns = "*", $limit = null, $offset = null): array
     {
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $table)) {
+            throw new InvalidArgumentException("Invalid table name.");
+        }
+
         $sql = "SELECT $columns FROM $table";
-        
+
         if (!empty($conditions)) {
             $conditionStrings = [];
             foreach ($conditions as $key => $value) {
-                $conditionStrings[] = "$key = :$key";
+                if (!preg_match('/^[a-zA-Z0-9_]+$/', $key)) {
+                    throw new InvalidArgumentException("Invalid condition key.");
+                }
+                $conditionStrings[] = "$key LIKE :$key";
             }
             $sql .= " WHERE " . implode(" AND ", $conditionStrings);
         }
 
+        if ($limit !== null) {
+            $sql .= " LIMIT :limit";
+        }
+        if ($offset !== null) {
+            $sql .= " OFFSET :offset";
+        }
+
         $stmt = $this->connection->prepare($sql);
 
-        if (!empty($conditions)) {
-            foreach ($conditions as $key => $value) {
-                $stmt->bindValue(":$key", $value);
-            }
+        foreach ($conditions as $key => $value) {
+            $stmt->bindValue(":$key", "%$value%");
+        }
+
+        if ($limit !== null) {
+            $stmt->bindValue(":limit", $limit, PDO::PARAM_INT);
+        }
+        if ($offset !== null) {
+            $stmt->bindValue(":offset", $offset, PDO::PARAM_INT);
         }
 
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Update - Update query
     public function update($table, $data, $conditions)
     {
         $setParts = [];
@@ -107,12 +120,10 @@ class DatabaseConnection
         $sql = "UPDATE $table SET $setString WHERE $conditionString";
         $stmt = $this->connection->prepare($sql);
 
-        // Bind the update data
         foreach ($data as $key => $value) {
             $stmt->bindValue(":$key", $value);
         }
 
-        // Bind the conditions
         foreach ($conditions as $key => $value) {
             $stmt->bindValue(":condition_$key", $value);
         }
@@ -120,7 +131,6 @@ class DatabaseConnection
         return $stmt->execute();
     }
 
-    // Delete - Delete query
     public function delete($table, $conditions)
     {
         $conditionStrings = [];
@@ -137,5 +147,35 @@ class DatabaseConnection
         }
 
         return $stmt->execute();
+    }
+
+    public function count($table, $conditions = []): int
+    {
+        if (!preg_match('/^[a-zA-Z0-9_]+$/', $table)) {
+            throw new InvalidArgumentException("Invalid table name.");
+        }
+
+        $sql = "SELECT COUNT(*) FROM $table";
+
+        if (!empty($conditions)) {
+            $conditionStrings = [];
+            foreach ($conditions as $key => $value) {
+                if (!preg_match('/^[a-zA-Z0-9_]+$/', $key)) {
+                    throw new InvalidArgumentException("Invalid condition key.");
+                }
+                $conditionStrings[] = "$key LIKE :$key";
+            }
+            $sql .= " WHERE " . implode(" AND ", $conditionStrings);
+        }
+
+        $stmt = $this->connection->prepare($sql);
+
+        foreach ($conditions as $key => $value) {
+            $stmt->bindValue(":$key", "%$value%");
+        }
+
+        $stmt->execute();
+
+        return (int) $stmt->fetchColumn();
     }
 }

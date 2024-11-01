@@ -1,5 +1,6 @@
 input,
-textarea {
+textarea,
+.form-control {
     width: 100%;
     padding: 7px 14px !important;
     margin: 10px 0;
@@ -11,7 +12,8 @@ textarea {
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+.form-control:focus {
     border-color: var(--link-color);
     outline: none;
 }
