@@ -20,6 +20,7 @@ class UserGetController
             "metaTags" => $metaTags,
             "users" => $users,
             "page" => $page,
+            "limit" => $limit,
             "total" => $totalUsers,
         ]);
     }

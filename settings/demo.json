@@ -15,5 +15,6 @@
     "website_phone": "",
     "website_display_name": "Онлайн магазин",
     "jwt_secret_key": "",
-    "jwt_expires": 3600
+    "jwt_expires": 3600,
+    "pagination_items_count": 10
 }

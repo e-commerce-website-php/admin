@@ -7,7 +7,7 @@
         ?>
 
         <?php if ($page > 1): ?>
-            <li><a href="?page=<?= $page - 1 ?>">Предишна</a></li>
+            <li><a href="?<?= http_build_query(array_merge($_GET, ["page" => $page - 1])) ?>">Предишна</a></li>
         <?php endif; ?>
 
         <?php if ($start > 1): ?>
@@ -18,20 +18,20 @@
         <?php endif; ?>
 
         <?php for ($i = $start; $i <= $end; $i++): ?>
-            <li<?= $page == $i ? ' class="active"' : '' ?>>
-                <a href="?page=<?= $i ?>"><?= $i ?></a>
-                </li>
-            <?php endfor; ?>
+            <li <?= $page == $i ? ' class="active"' : '' ?>>
+                <a href="?<?= http_build_query(array_merge($_GET, ["page" => $i])) ?>"><?= $i ?></a>
+            </li>
+        <?php endfor; ?>
 
-            <?php if ($end < $totalPages): ?>
-                <?php if ($end < $totalPages - 1): ?>
-                    <li><span>...</span></li>
-                <?php endif; ?>
-                <li><a href="?page=<?= $totalPages ?>"><?= $totalPages ?></a></li>
+        <?php if ($end < $totalPages): ?>
+            <?php if ($end < $totalPages - 1): ?>
+                <li><span>...</span></li>
             <?php endif; ?>
+            <li><a href="?<?= http_build_query(array_merge($_GET, ["page" => $totalPages])) ?>"><?= $totalPages ?></a></li>
+        <?php endif; ?>
 
-            <?php if ($page < $totalPages): ?>
-                <li><a href="?page=<?= $page + 1 ?>">Следваща</a></li>
-            <?php endif; ?>
+        <?php if ($page < $totalPages): ?>
+            <li><a href="?<?= http_build_query(array_merge($_GET, ["page" => $page + 1])) ?>">Следваща</a></li>
+        <?php endif; ?>
     </ul>
 </nav>
