@@ -4,8 +4,8 @@
     <?php require "views/includes/navigation.php"; ?>
 </header>
 
-<main>
-    <div class="container mx-auto max-md:px-5">
+<main class="px-5 mb-5">
+    <div class="container mx-auto">
         <h1 class="page-heading">Създаване на нова категория</h1>
         <?php if (!empty($_SESSION["parent_category"])): ?>
             <div>
@@ -17,6 +17,7 @@
         <?php endif; ?>
     </div>
 
+    <?php require "views/helpers/display-messages.php"; ?>
     <?php require "views/categories/create/form.php"; ?>
 </main>
 

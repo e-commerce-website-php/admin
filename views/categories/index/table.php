@@ -57,9 +57,28 @@
         const selectedValue = event.target.value;
         const id = event.target.closest("tr").getAttribute("data-category-id");
 
-        if (selectedValue !== "none") {
-            event.target.value = "none";
+        if (selectedValue === "edit") {
             window.location.href = `/categories/edit?id=${id}`;
         }
+        
+        if (selectedValue === "delete") {
+            if (confirm("<?= LANGUAGE["delete_confirm"] ?>")) {
+                deleteItem(id);
+            }
+        }
+        
+        event.target.value = "none";
+    }
+
+    async function deleteItem(id) {
+        const url = `/categories/delete?id=${id}`;
+        const response = await fetch(url, { method: "DELETE" });
+
+        if (response.status !== 200) {
+            const data = await response.json();
+            alert(data.errors);
+        }
+        
+        window.location.reload();
     }
 </script>

@@ -75,7 +75,7 @@ class CategoryService
     }
 
     public static function Update(
-        int $id,
+        string $id,
         ?string $name,
         ?string $slug,
         ?string $description,
@@ -84,8 +84,7 @@ class CategoryService
         ?string $status,
         ?string $seo_keywords,
         ?array $image,
-        ?int $parent_id): array
-    {
+    ): array {
         $validationResult = CategoryValidator::validateCreateOrUpdate($name, $slug, $seo_title, $seo_description, $status);
         if (!$validationResult["success"]) {
             return $validationResult;
@@ -100,10 +99,6 @@ class CategoryService
             return ["success" => false, "error" => LANGUAGE["slug_uniqueness_error"]];
         }
 
-        if ($parent_id && $parent_id !== $category["data"]["parent_id"] && self::get("parent_id", $parent_id)["success"] === false) {
-            return ["success" => false, "error" => LANGUAGE["parent_id_validation_error"]];
-        }
-
         global $db;
 
         try {
@@ -115,7 +110,6 @@ class CategoryService
                 "seo_description" => $seo_description,
                 "seo_keywords" => $seo_keywords,
                 "status" => $status,
-                "parent_id" => $parent_id,
             ], ["id" => $id]);
 
             if ($image && !empty($image["name"])) {
@@ -151,5 +145,31 @@ class CategoryService
         }
 
         return ["success" => false];
+    }
+
+    public static function deleteById(string $id): array
+    {
+        $category = self::get("id", $id);
+
+        if ($category["success"] === false) {
+            return ["success" => false, "error" => LANGUAGE["category_not_found"]];
+        }
+
+        global $db;
+
+        $isDeleted = $db->delete("categories", ["id" => $id]);
+
+        if (!$isDeleted) {
+            $db->rollBack();
+            return ["success" => false, "error" => LANGUAGE["delete_failed"]];
+        }
+
+        $db->commit();
+
+        if (isset($category["data"]["image"]) && file_exists($category["data"]["image"])) {
+            unlink($category["data"]["image"]);
+        }
+
+        return ["success" => true];
     }
 }
