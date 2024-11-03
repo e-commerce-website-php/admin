@@ -89,7 +89,7 @@ function getValue(string $key, ?array $array = null, ?string $default = ""): mix
             <?php if ($category["image"]): ?>
                 <div class="mt-5">
                     <div>Текуща картинка</div>
-                    <img src="/<?= $category["image"] ?>" width="360" height="360" class="rounded custom-border shadow">
+                    <img class="w-[360px] h-[360px] object-cover" decoding="async" src="/<?= $category["image"] ?>" width="360" height="360" class="rounded custom-border shadow">
                 </div>
             <?php endif; ?>
             <img id="imagePreview" width="360" height="360" style="display: none;" class="mt-5 rounded custom-border shadow">

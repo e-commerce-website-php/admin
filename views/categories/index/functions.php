@@ -11,14 +11,14 @@ function displayColumn(string $column, array $category): string
 
 function displayStatus(array $category): string
 {
-    $statuses = ["active" => "Активен", "inactive"];
+    $statuses = ["active" => "Активен", "inactive" => "Неактивен"];
     return !empty($category["status"]) ? $statuses[$category["status"]] : "Няма";
 }
 
 function displayImage(array $category): string
 {
     if (!empty($category["image"])) {
-        return '<img src="/' . htmlspecialchars($category["image"]) . '" alt="' . htmlspecialchars($category["name"]) . '" width="60" height="60">';
+        return '<img class="w-[100px] h-[100px] object-cover" decoding="async" src="/' . htmlspecialchars($category["image"]) . '" alt="' . htmlspecialchars($category["name"]) . '" width="100" height="100">';
     } else {
         return 'Няма';
     }

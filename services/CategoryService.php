@@ -125,7 +125,10 @@ class CategoryService
                 }
 
                 $db->update("categories", ["image" => $result["data"]["path"]], ["id" => $id]);
-                unlink($category["data"]["image"]);
+                
+                if (file_exists($category["data"]["image"])) {
+                    unlink($category["data"]["image"]);
+                }
             }
 
             $db->commit();
