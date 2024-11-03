@@ -43,4 +43,6 @@
     </table>
 </div>
 
-<?php require "views/users/pagination.php"; ?>
+<?php if (!empty($users) && count($users) > 0 && $total > $limit): ?>
+    <?php require "views/helpers/pagination.php"; ?>
+<?php endif; ?>

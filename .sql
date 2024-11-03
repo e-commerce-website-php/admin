@@ -23,17 +23,23 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `categories` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(100) NOT NULL UNIQUE,
-    `permalink` VARCHAR(255) NOT NULL UNIQUE,
-    `description` TEXT,
-    `image` JSON NULL,
+    `category_id` INT AUTO_INCREMENT PRIMARY KEY,
     `parent_id` INT DEFAULT NULL,
-    `options` JSON DEFAULT NULL,
+    `name` VARCHAR(255) NOT NULL,
+    `description` TEXT,
+    `image_url` VARCHAR(255),
+    `seo_title` VARCHAR(255),
+    `seo_description` TEXT,
+    `seo_keywords` VARCHAR(255),
+    `slug` VARCHAR(255) UNIQUE NOT NULL,
+    `status` ENUM('active', 'inactive') DEFAULT 'active',
+    `display_order` INT DEFAULT 0,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `status` ENUM('active', 'inactive') DEFAULT 'active'
+    FOREIGN KEY (parent_id) REFERENCES categories(category_id) ON DELETE SET NULL
 );
+
+CREATE INDEX idx_category_name ON categories(name);
 
 CREATE TABLE IF NOT EXISTS `products` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,

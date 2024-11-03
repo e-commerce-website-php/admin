@@ -8,6 +8,9 @@
                 <a href="/users">Потребители</a>
             </li>
             <li>
+                <a href="/categories">Категории</a>
+            </li>
+            <li>
                 <a href="/auth/logout?_method=DELETE">Изход</a>
             </li>
         <?php else: ?>

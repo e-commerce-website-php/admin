@@ -48,4 +48,11 @@ class Setup
         }
         $_SESSION[$key] = $value;
     }
+
+    public static function deleteSessions(array $sessionKeys = []): void
+    {
+        foreach ($sessionKeys as $key) {
+            unset($_SESSION[$key]);
+        }
+    }
 }

@@ -1,12 +1,12 @@
 <?php
 
-class UserGetController
+class UserGetController extends BaseController
 {
     public static function GetItems(): void
     {
         self::checkAuthentication();
 
-        $metaTags = self::generateMetaTags();
+        $metaTags = self::generateMetaTags("Потребители");
 
         [$page, $limit, $column, $search] = self::getRequestParameters();
 
@@ -23,30 +23,5 @@ class UserGetController
             "limit" => $limit,
             "total" => $totalUsers,
         ]);
-    }
-
-    private static function checkAuthentication(): void
-    {
-        if (!AuthService::isAuth()) {
-            Setup::redirect("/auth/login");
-        }
-    }
-
-    private static function generateMetaTags(): string
-    {
-        $generator = new MetaTagsGenerator();
-        return $generator->generate([
-            "title" => "Потребители",
-        ]);
-    }
-
-    private static function getRequestParameters(): array
-    {
-        $page = isset($_GET["page"]) ? (int) $_GET["page"] : 1;
-        $limit = isset($_GET["limit"]) ? (int) $_GET["limit"] : SETTINGS["pagination_items_count"];
-        $column = $_GET["column"] ?? null;
-        $search = $_GET["search"] ?? null;
-
-        return [$page, $limit, $column, $search];
     }
 }
