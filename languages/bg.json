@@ -57,5 +57,7 @@
     "error_creating_category": "Грешка при създаване на категорията.",
     "status_validation_error": "Невалидна стойност на статус.",
     "success_updated_category": "Категорията беше редактирана успешно!",
-    "category_not_found": "Категорията не беше намерена."
+    "category_not_found": "Категорията не беше намерена.",
+    "success_deleted": "Записът беше изтрит успешно!",
+    "delete_confirm": "Сигурни ли сте, че искате да изтриете този запис?"
 }

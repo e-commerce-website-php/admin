@@ -23,7 +23,8 @@ class BaseController
         $limit = isset($_GET["limit"]) ? (int) $_GET["limit"] : SETTINGS["pagination_items_count"];
         $column = $_GET["column"] ?? null;
         $search = $_GET["search"] ?? null;
+        $id = $_GET["id"] ?? null;
 
-        return [$page, $limit, $column, $search];
+        return [$page, $limit, $column, $search, $id];
     }
 }

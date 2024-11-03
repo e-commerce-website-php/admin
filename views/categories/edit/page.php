@@ -4,11 +4,12 @@
     <?php require "views/includes/navigation.php"; ?>
 </header>
 
-<main>
-    <div class="container mx-auto max-md:px-5">
+<main class="mx-5">
+    <div class="container mx-auto">
         <h1 class="page-heading">Редактиране на нова категория</h1>
     </div>
 
+    <?php require "views/helpers/display-messages.php"; ?>
     <?php require "views/categories/edit/form.php"; ?>
 </main>
 

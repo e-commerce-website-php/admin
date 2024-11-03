@@ -4,27 +4,12 @@ function getValue(string $key, ?array $array = null, ?string $default = ""): mix
     $array = $array ?? $_POST;
     return !empty($array[$key]) ? $array[$key] : $default;
 }
-    $errorMessage = $_SESSION["error_message"] ?? null;
-    $successMessage = $_SESSION["success_message"] ?? null;
     $validationErrors = $_SESSION["errors"] ?? [];
     Setup::deleteSessions(["post", "image", "parent_category", "errors", "error", "error_message"]);
 ?>
 
 <div class="secondary container mx-5 lg:mx-auto mt-5 p-10 lg:p-10 border rounded shadow">
     <form id="form" action="/categories/create" method="POST" class="mx-auto" enctype="multipart/form-data">
-
-        <?php if ($errorMessage): ?>
-            <div class="text-red-500 text-center mb-5">
-                <?= $errorMessage ?>
-            </div>
-            <?php unset($_SESSION["error_message"]) ?>
-        <?php endif; ?>
-        <?php if ($successMessage): ?>
-            <div class="text-green-500 text-center mb-5">
-                <?= $successMessage ?>
-            </div>
-            <?php unset($_SESSION["success_message"]) ?>
-        <?php endif; ?>
 
         <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-10">
             <div class="mb-4">

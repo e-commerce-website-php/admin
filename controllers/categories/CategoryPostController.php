@@ -3,7 +3,7 @@
 class CategoryPostController extends BaseController
 {
     private static array $createFields = ["name", "slug", "description", "seo_title", "seo_description", "seo_keywords", "status", "image", "parent_id"];
-    private static array $editFields = ["name", "slug", "description", "seo_title", "seo_description", "seo_keywords", "status", "image", "parent_id"];
+    private static array $editFields = ["name", "slug", "description", "seo_title", "seo_description", "seo_keywords", "status", "image"];
 
     private static function checkAccess(callable $function): void
     {
