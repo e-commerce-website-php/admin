@@ -16,7 +16,7 @@
         <tbody>
             <?php if (!empty($categories) && count($categories) > 0): ?>
                 <?php foreach ($categories as $category): ?>
-                    <tr>
+                    <tr data-category-id="<?= $category["id"] ?>">
                         <td><?= displayColumn("name", $category) ?></td>
                         <td><?= displayColumn("slug", $category) ?></td>
                         <td><?= displayColumn("description", $category) ?></td>
@@ -55,10 +55,11 @@
 <script>
     function send(event) {
         const selectedValue = event.target.value;
+        const id = event.target.closest("tr").getAttribute("data-category-id");
 
         if (selectedValue !== "none") {
-            alert(selectedValue);
             event.target.value = "none";
+            window.location.href = `/categories/edit?id=${id}`;
         }
     }
 </script>

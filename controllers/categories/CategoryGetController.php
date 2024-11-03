@@ -36,4 +36,27 @@ class CategoryGetController extends BaseController
             "metaTags" => $metaTags,
         ]);
     }
+
+    public static function Edit(): void
+    {
+        self::checkAuthentication();
+        $metaTags = self::generateMetaTags("Редактиране на нова категорията");
+
+        $secureToken = Generations::generateToken(Generations::generateFourDigitCode());
+        $_SESSION["secure_token"] = $secureToken;
+
+        $result = CategoryService::get("id", $_GET["id"]);
+
+        if ($result["success"] === false) {
+            Setup::redirect("/categories");
+        }
+
+        $category = $result["data"];
+
+        Setup::View("categories/edit", [
+            "user" => AuthService::isAuth() ?? null,
+            "category" => $category,
+            "metaTags" => $metaTags,
+        ]);
+    }
 }

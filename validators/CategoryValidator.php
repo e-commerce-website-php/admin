@@ -2,7 +2,12 @@
 
 class CategoryValidator
 {
-    public static function validateCreate(?string $name, ?string $slug, ?string $meta_title, ?string $meta_description): array
+    public static function validateCreateOrUpdate(
+        ?string $name,
+        ?string $slug,
+        ?string $meta_title,
+        ?string $meta_description,
+        ?string $status): array
     {
         $errors = [];
 
@@ -20,6 +25,10 @@ class CategoryValidator
 
         if (mb_strlen($meta_description) > 170) {
             $errors["meta_description_validation_error"] = LANGUAGE["meta_description_validation_error"];
+        }
+
+        if ($status !== "active" && $status !== "inactive") {
+            $errors["status_validation_error"] = LANGUAGE["status_validation_error"];
         }
 
         if (count($errors) > 0) {

@@ -22,24 +22,22 @@ CREATE TABLE IF NOT EXISTS `users` (
   `status` enum('active','inactive','banned') DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE IF NOT EXISTS `categories` (
-    `category_id` INT AUTO_INCREMENT PRIMARY KEY,
-    `parent_id` INT DEFAULT NULL,
-    `name` VARCHAR(255) NOT NULL,
-    `description` TEXT,
-    `image_url` VARCHAR(255),
-    `seo_title` VARCHAR(255),
-    `seo_description` TEXT,
-    `seo_keywords` VARCHAR(255),
-    `slug` VARCHAR(255) UNIQUE NOT NULL,
-    `status` ENUM('active', 'inactive') DEFAULT 'active',
-    `display_order` INT DEFAULT 0,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (parent_id) REFERENCES categories(category_id) ON DELETE SET NULL
-);
-
-CREATE INDEX idx_category_name ON categories(name);
+CREATE TABLE `categories` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `seo_title` varchar(255) DEFAULT NULL,
+  `seo_description` text DEFAULT NULL,
+  `seo_keywords` varchar(255) DEFAULT NULL,
+  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `parent_id` int(11) DEFAULT NULL,
+  `options` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`options`)),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `status` enum('active','inactive') DEFAULT 'active',
+  `display_order` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS `products` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
