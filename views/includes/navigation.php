@@ -2,23 +2,23 @@
     <ul>
         <?php if (!empty($user)): ?>
             <li>
-                <a href="/">Табло</a>
+                <a href="/" class="<?= $_SERVER["REQUEST_URI"] === "/" ? "active" : "" ?>">Табло</a>
             </li>
             <li>
-                <a href="/users">Потребители</a>
+                <a href="/users" class="<?= $_SERVER["REQUEST_URI"] === "/users" ? "active" : "" ?>">Потребители</a>
             </li>
             <li>
-                <a href="/products">Продукти</a>
+                <a href="/products" class="<?= str_starts_with($_SERVER["REQUEST_URI"], "/products") ? "active" : "" ?>">Продукти</a>
             </li>
             <li>
-                <a href="/categories">Категории</a>
+                <a href="/categories" class="<?= str_starts_with($_SERVER["REQUEST_URI"], "/categories") ? "active" : "" ?>">Категории</a>
             </li>
             <li>
                 <a href="/auth/logout?_method=DELETE">Изход</a>
             </li>
         <?php else: ?>
             <li>
-                <a href="/auth/login">Вход</a>
+                <a href="/auth/login" class="<?= $_SERVER["REQUEST_URI"] === "/auth/login" ? "active" : "" ?>">Вход</a>
             </li>
         <?php endif; ?>
     </ul>

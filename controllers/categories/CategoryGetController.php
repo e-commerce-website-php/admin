@@ -5,13 +5,22 @@ class CategoryGetController extends BaseController
     public static function GetItems(): void
     {
         self::checkAuthentication();
-        
+
         $metaTags = self::generateMetaTags("Категории");
         [$page, $limit, $column, $search] = self::getRequestParameters();
         $offset = ($page - 1) * $limit;
 
         $categories = CategoryService::read($limit, $offset, $column, $search);
+
+        if ($categories === null) {
+            trigger_error("Неуспешно извличане на категории. Моля, проверете параметрите.", E_USER_WARNING);
+        }
+
         $totalCategories = CategoryService::total($column, $search);
+
+        if ($totalCategories === null) {
+            throw new Exception("Неуспешно извличане на общия брой категории.");
+        }
 
         Setup::View("categories/index", [
             "user" => AuthService::isAuth() ?? null,
