@@ -95,8 +95,12 @@ class CategoryService
             return ["success" => false, "error" => LANGUAGE["category_not_found"]];
         }
 
-        if ($slug && $slug !== $category["data"]["slug"] && self::get("slug", $slug)["success"] === true) {
-            return ["success" => false, "error" => LANGUAGE["slug_uniqueness_error"]];
+        if ($slug) {
+            $existingSlug = self::get("slug", $slug);
+            
+            if ($existingSlug["success"] === true && $existingSlug["data"]["id"] !== $category["data"]["id"]) {
+                return ["success" => false, "error" => LANGUAGE["slug_uniqueness_error"]];
+            }
         }
 
         global $db;

@@ -11,6 +11,10 @@
             <a href="/categories/create" class="button primary">Създаване</a>
         </div>
 
+        <div class="mt-5">
+            <?php require "views/helpers/display-messages.php"; ?>
+        </div>
+        
         <?php if (!empty($categories) && count($categories) > 0): ?>
             <?php require "views/categories/index/filters.php"; ?>
         <?php endif; ?>

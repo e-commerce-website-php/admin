@@ -81,6 +81,7 @@
         if (response.status !== 200) {
             const data = await response.json();
             alert(data.errors);
+            return;
         }
         
         window.location.reload();

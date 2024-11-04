@@ -63,5 +63,6 @@
     "product_sku_validation_error": "Това е уникален номер на артикул и не може да бъде празен.",
     "error_creating_product": "Грешка при създаване на продукт.",
     "success_created_product": "Продуктът беше създаден успешно!",
-    "success_updated_product": "Продуктът беше редактиран успешно!"
+    "success_updated_product": "Продуктът беше редактиран успешно!",
+    "product_not_found": "Продуктът не беше намерен."
 }

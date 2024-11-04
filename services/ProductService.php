@@ -137,6 +137,7 @@ class ProductService
         ?string $sku,
         ?string $description,
         ?array $image,
+        ?array $additional_images,
         ?string $seo_title,
         ?string $seo_description,
         ?string $status,
@@ -152,8 +153,12 @@ class ProductService
             return ["success" => false, "error" => LANGUAGE["category_not_found"]];
         }
 
-        if ($slug && $slug !== $product["data"]["slug"] && self::get("slug", $slug)["success"] === true) {
-            return ["success" => false, "error" => LANGUAGE["slug_uniqueness_error"]];
+        if ($slug) {
+            $existingSlug = self::get("slug", $slug);
+            
+            if ($existingSlug["success"] === true && $existingSlug["data"]["id"] !== $product["data"]["id"]) {
+                return ["success" => false, "error" => LANGUAGE["slug_uniqueness_error"]];
+            }
         }
 
         global $db;
@@ -189,6 +194,40 @@ class ProductService
                 }
             }
 
+            if (isset($additional_images) && !empty($additional_images["name"][0])) {
+                $uploadedImagePaths = [];
+
+                foreach ($additional_images["name"] as $key => $imageName) {
+                    $image = [
+                        "name" => $additional_images["name"][$key],
+                        "type" => $additional_images["type"][$key],
+                        "tmp_name" => $additional_images["tmp_name"][$key],
+                        "error" => $additional_images["error"][$key],
+                        "size" => $additional_images["size"][$key]
+                    ];
+
+                    if (!empty($image["name"])) {
+                        $result = UploadService::uploadImage($image);
+
+                        if ($result["success"] === false) {
+                            throw new Exception($result["error"]);
+                        }
+
+                        $uploadedImagePaths[] = $result["data"]["path"];
+                    }
+                }
+
+                $db->update("products", ["additional_images" => json_encode($uploadedImagePaths)], ["id" => $id]);
+
+                if (isset($product["data"]["additional_images"]) && is_array($product["data"]["additional_images"])) {
+                    foreach ($product["data"]["additional_images"] as $additionalImage) {
+                        if (file_exists($additionalImage)) {
+                            unlink($additionalImage);
+                        }
+                    }
+                }
+            }
+
             $db->commit();
             return ["success" => true, "data" => self::get("id", $id)];
         } catch (Exception $e) {
@@ -208,7 +247,10 @@ class ProductService
         $products = $db->read("products", [$column => $value]);
 
         if (!empty($products) && count($products) > 0) {
-            return ["success" => true, "data" => $products[0]];
+            $product = $products[0];
+            $product["additional_images"] = json_decode($product["additional_images"]);
+
+            return ["success" => true, "data" => $product];
         }
 
         return ["success" => false];
@@ -235,6 +277,14 @@ class ProductService
 
         if (isset($product["data"]["image"]) && file_exists($product["data"]["image"])) {
             unlink($product["data"]["image"]);
+        }
+
+        if (isset($product["data"]["additional_images"]) && is_array($product["data"]["additional_images"])) {
+            foreach ($product["data"]["additional_images"] as $additionalImage) {
+                if (file_exists($additionalImage)) {
+                    unlink($additionalImage);
+                }
+            }
         }
 
         return ["success" => true];

@@ -3,7 +3,7 @@
 class ProductPostController extends BaseController
 {
     private static array $createFields = ["name", "slug", "description", "short_description", "price", "tax", "sale_price", "stock_quantity", "show_stock", "sku", "additional_images", "image", "status", "seo_title", "seo_description", "seo_keywords"];
-    private static array $editFields = ["name", "slug", "description", "short_description", "price", "tax", "sale_price", "stock_quantity", "show_stock", "sku", "image", "status", "seo_title", "seo_description", "seo_keywords"];
+    private static array $editFields = ["name", "slug", "description", "short_description", "price", "tax", "sale_price", "stock_quantity", "show_stock", "sku", "image", "additional_images", "status", "seo_title", "seo_description", "seo_keywords"];
 
     private static function checkAccess(callable $function): void
     {
@@ -72,6 +72,7 @@ class ProductPostController extends BaseController
             $preparedData[$field] = $_POST[$field] ?? null;
         }
         $preparedData["image"] = $_FILES["image"] ?? null;
+        $preparedData["additional_images"] = $_FILES["additional_images"] ?? null;
 
         $result = ProductService::Update($_GET["id"], ...$preparedData);
 
