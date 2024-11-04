@@ -11,7 +11,7 @@ function displayColumn(string $column, array $category): string
 
 function displayStatus(array $category): string
 {
-    $statuses = ["active" => "Активен", "inactive" => "Неактивен"];
+    $statuses = ["active" => "Активна", "inactive" => "Неактивна"];
     return !empty($category["status"]) ? $statuses[$category["status"]] : "Няма";
 }
 

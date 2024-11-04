@@ -6,21 +6,21 @@
 
 <main class="px-5 mb-5">
     <div class="container mx-auto">
-        <h1 class="page-heading">Създаване на нова категория</h1>
-        <?php if (!empty($_SESSION["parent_category"])): ?>
+        <h1 class="page-heading">Създаване на нов продукт</h1>
+        <?php if (!empty($_SESSION["product_category"])): ?>
             <div>
                 <span>Родителска категория: </span>
-                <span><?= $_SESSION["parent_category"]["name"] ?></span>
+                <span><?= $_SESSION["product_category"]["name"] ?></span>
             </div>
         <?php else: ?>
-            <div>Не е зададена родителска категория</div>
+            <div>Не е зададена категория</div>
         <?php endif; ?>
         <div class="mt-5">
             <?php require "views/helpers/display-messages.php"; ?>
         </div>
     </div>
 
-    <?php require "views/categories/create/form.php"; ?>
+    <?php require "views/products/create/form.php"; ?>
 </main>
 
 <?php require "views/includes/footer.php"; ?>

@@ -8,6 +8,9 @@
                 <a href="/users">Потребители</a>
             </li>
             <li>
+                <a href="/products">Продукти</a>
+            </li>
+            <li>
                 <a href="/categories">Категории</a>
             </li>
             <li>

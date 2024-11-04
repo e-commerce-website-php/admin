@@ -10,5 +10,6 @@ $router->get("/", ["IndexGetController", "Dashboard"]);
 require "auth.php";
 require "users.php";
 require "categories.php";
+require "products.php";
 
 $router->route($uri, $method);

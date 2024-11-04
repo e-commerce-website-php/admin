@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `status` enum('active','inactive','banned') DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-CREATE TABLE `categories` (
+CREATE TABLE IF NOT EXISTS `categories` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `slug` varchar(255) NOT NULL,
@@ -42,6 +42,7 @@ CREATE TABLE `categories` (
 CREATE TABLE IF NOT EXISTS `products` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) NOT NULL,
+    `slug` VARCHAR(255) UNIQUE,
     `description` TEXT,
     `short_description` TEXT,
     `price` DECIMAL(10, 2) NOT NULL,
